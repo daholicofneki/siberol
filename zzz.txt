@@ -1,0 +1,5 @@
+http://jsfiddle.net/chriscoyier/GaEzp/95/
+http://tympanus.net/codrops/2011/11/23/20-examples-of-centered-website-designs/?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+tympanus+%28Codrops%29
+http://csswizardry.com/2011/02/css-powered-ribbons-the-clean-way/
+http://css-tricks.com/snippets/css/ribbon/
+http://rudyazhar.com/wp-content/uploads/2011/08/cssribbon.html
