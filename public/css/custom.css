@@ -1,0 +1,16 @@
+body{color:#222}
+footer{border-top:1px solid #F8F0DB;}
+h2 {color:#38B7CE; padding:5px 0;}
+ul{ list-style:none; margin:0px }
+li { padding:2px }
+ul.news-ticker {
+    list-style:none;
+    margin:0;
+    padding:10px;
+    background-color:#FFFEB8;
+    border:1px solid #ccc;
+}
+ul.news-ticker a{
+    font-weight:bold;
+    padding:5px;
+}
