@@ -9,6 +9,8 @@
 	<body>
 <?php
 require_once ('library/database.php');
+$data = $DB->get_all('SELECT * FROM berita');
+$no =1;
 ?>
 
 <script type="text/javascript">
@@ -56,18 +58,19 @@ require_once ('library/database.php');
 					</tr>
 					</thead>
 					<tbody>
+					<?php if($data): ?>
+					<?php foreach ($data as $item):?>
 					<tr>
-						<td>1</td>
-						<td></td>
-						<td></td>
-						<td></td>
+						<td><?php echo $no++ ?></td>
+						<td><?php echo $item->judul ?></td>
+						<td><?php echo substr($item->isi,0,500).'...' ?></td>
+						<td>
+							<a class="i-edit" href="wartawan_edit.php">&nbsp; Edit</a>
+							<a class="i-cross" href="#">&nbsp; Delete</a>
+						</td>
 					</tr>
-					<tr>
-						<td>2</td>
-						<td></td>
-						<td></td>
-						<td></td>
-					</tr>
+					<?php endforeach?>
+					<?php endif?>
 					</tbody>
 				</table>
 			</div>

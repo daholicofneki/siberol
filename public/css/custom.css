@@ -81,4 +81,7 @@ label { font-weight:normal; padding:5px; }
     border: 0;
 }
 
-
+.i-add		{ background: url(../image/bullet_plus.png) left no-repeat; padding-left:10px; }
+.i-edit		{ background: url(../image/bullet_edit.png) left no-repeat; padding-left:10px; }
+.i-cross	{ background: url(../image/bullet_cross.png) left no-repeat; padding-left:10px; }
+.i-tick		{ background: url(../image/bullet_tick.png) left no-repeat; padding-left:10px; }

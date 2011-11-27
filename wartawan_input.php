@@ -12,6 +12,7 @@ if ($_POST)
 {
 	$db = new database();
 	$db::query ('INSERT INTO berita (judul,isi,id_wartawan) VALUES ("'.$_POST['_judul'].'","'.$_POST['_isi'].'",1)');
+	
 }
 ?>
 <div class="topbar">
