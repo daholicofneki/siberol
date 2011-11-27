@@ -7,7 +7,7 @@
 	</head>
 	<body>
 <?php
-require_once ('library/database.php');
+require_once ('library/config.php');
 if ($_POST)
 {
 	$db = new database();

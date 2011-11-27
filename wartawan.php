@@ -8,7 +8,7 @@
 	</head>
 	<body>
 <?php
-require_once ('library/database.php');
+require_once ('library/config.php');
 $data = $DB->get_all('SELECT * FROM berita');
 $no =1;
 ?>
