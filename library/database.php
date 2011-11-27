@@ -1,43 +1,124 @@
 <?php
-class DB
-{
-	public static function koneksi() {
-		@mysql_pconnect ('localhost' , 'root', '') or die ('failed to connect');
-		@mysql_select_db ('siberol') or die ('database does not exist');
-	}
-	
-	public static function get_all ($query = FALSE)
-	{
-		DB::koneksi();
-		$q = mysql_query ($query);
+/**
+ * Database Class
+ *
+ * @package     Database Class
+ * @author      Purwandi <pur@purwandi.me>
+ * @copyright   2011
+ * @license     BSD
+ */
 
-		if ($q)
-		{
-			$q = mysql_fetch_object ($q);
-			$arr = array();
-
-			foreach ($q as $data)
-			{
-				$arr[] = $data;
-			}
-			return $arr;
-		}
-	}
-	
-	public static function query ($query = FALSE)
-	{
-		DB::koneksi();
-
-		$q = mysql_query ($query);
-		if ($q)
-		{
-			echo "success";
-		}
-		else
-		{
-			echo "failed";
-		}
-	}
+class Database {
+        
+        private $host           = 'localhost';
+        private $username       = 'root';
+        private $password       = '';
+        private $db             = 'siberol';
+        private $connection;
+        private $arr            = array ();
+        
+        
+        /**
+         * Constructor
+         *
+         * @access      public
+         * @return      void
+         */
+        public function __construct ()
+        {
+                $this->connection = @mysql_pconnect ($this->host, $this->username, $this->password);
+                
+                try
+                {
+                        if ( ! $this->connection)
+                        {
+                                throw new Exception ('Connection Error');
+                        }
+                        else
+                        {
+                                try
+                                {
+                                        if ( ! @mysql_select_db($this->db, $this->connection))
+                                        {
+                                               throw new Exception ('Database Salah'); 
+                                        }
+                                }
+                                catch (Exception $m)
+                                {
+                                        //echo "<br />";
+                                        //echo " File : ". $m->getFile()."<br />";
+                                        echo " Error : ". $m->getMessage ();
+                                }
+                        }
+                }
+                catch ( Exception $m)
+                {
+                        //echo "<br />";
+                        //echo " File : ". $m->getFile()."<br />";
+                        echo " Error : ". $m->getMessage ();
+                }
+                
+        }
+        
+        /**
+         * Database Query
+         *
+         * @access      public
+         * @param       string
+         * @return      void
+         */
+        public function query ( $SQL = FALSE )
+        {
+                if ($SQL)
+                {
+                        try
+                        {
+                                $query = mysql_query ($SQL);
+                                if  ( ! ($query AND  mysql_num_rows($query)) )
+                                {
+                                        throw new Exception ('Query Gagal');
+                                }
+                                else
+                                {
+                                        return mysql_query ($SQL);
+                                }
+                        }
+                        catch ( Exception $m)
+                        {
+                                //echo "<br />";
+                               // echo " File : ". $m->getFile()."<br />";
+                                echo " Error : ". $m->getMessage ();
+                        }
+                }
+        }
+        
+        /**
+         * Get All Record
+         *
+         * @access      public
+         * @param       string
+         * @return      void
+         */
+        public function get_all ( $SQL = FALSE )
+        {
+                if ($SQL)
+                {
+                        $SQL = $this->query ($SQL);
+                        if ( $SQL )
+                        {
+                                while ($row = mysql_fetch_object ($SQL))
+                                {
+                                        $this->arr[] = $row;
+                                }
+                                return $this->arr;
+                        }
+                       
+                }
+        }
+        
 }
 
-
+/*  End class Database  */
+$DB = new Database ();
+//$DB->show_host();
+//print_r ($DB->get_all("SELECT * FROM berita WHERE status='1'"));

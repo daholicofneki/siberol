@@ -14,3 +14,71 @@ ul.news-ticker a{
     font-weight:bold;
     padding:5px;
 }
+
+ul.news-ticker a:hover {
+    color:#D35629;
+}
+
+form { margin: 10px 0;}
+form ul { padding-top: 10px} 
+form ul li { list-style : none; min-height: 33px; display: block; margin:3px 0; padding:0;}
+form ul li label { width : 150px; float: left;}
+form ul li span.hint {
+		position: absolute;
+		font-size:11px;
+		min-height:25px;
+		right: 20px;
+		z-index:1;
+		width: 200px;
+		margin-top: -4px;
+		border: 1px solid #c93;
+		padding: 4px 6px;
+		background: #ffc url(../image/pointer.gif) no-repeat -10px 5px;
+		box-shadow: 0 0 8px #D0D0D0;
+		-webkit-box-shadow: 0 0 8px #D0D0D0;
+		-moz-box-shadow: 0 0 8px #D0D0D0;}
+form ul li span.hint .hint-pointer{ position: absolute; left: -10px; top: 5px; width: 10px; height: 19px; background: url(../image/pointer.gif) left top no-repeat;}
+form ul li.form_handle { margin-top:15px; border-top: 1px solid #DDD; padding: 10px;}
+
+label { font-weight:normal; padding:5px; }
+
+
+
+
+.content {
+    background-color: #fff;
+    padding: 20px;
+    margin: 0 -20px; /* negative indent the amount of the padding to maintain the grid system */
+    -webkit-border-radius: 0 0 6px 6px;
+    -moz-border-radius: 0 0 6px 6px;
+    border-radius: 0 0 6px 6px;
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+    -moz-box-shadow: 0 1px 2px rgba(0,0,0,.15);
+    box-shadow: 0 1px 2px rgba(0,0,0,.15);
+}
+
+/* Page header tweaks */
+.page-header {
+    background-color: #f5f5f5;
+    padding: 50px 20px 10px;
+    margin: -20px -20px 20px;
+    color:#2BB6CF;
+}
+
+/* Styles you shouldn't keep as they are for displaying this base example only */
+.content .span12,
+.content .span4 {
+    min-height: 300px;
+}
+/* Give a quick and non-cross-browser friendly divider */
+.content .span4 {
+    margin-left: 0;
+    padding-left: 19px;
+    border-left: 1px solid #eee;
+}
+
+.topbar .btn {
+    border: 0;
+}
+
+

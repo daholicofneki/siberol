@@ -1,19 +1,23 @@
 <html>
 	<head>
-		<title>Wartawan - Input Berita</title>
+		<title>Wartawan - Daftar Berita</title>
 		<link href="public/css/bootstrap.min.css" media="screen" rel="stylesheet" type="text/css" />
 		<link href="public/css/custom.css" media="screen" rel="stylesheet" type="text/css" />
 		<script src="public/js/jquery-1.7.min.js" type="text/javascript"></script>
+		<script src="public/js/jquery.tablesorter.min.js" type="text/javascript"></script>
 	</head>
 	<body>
 <?php
 require_once ('library/database.php');
-if ($_POST)
-{
-	$db = new database();
-	$db::query ('INSERT INTO berita (judul,isi,id_wartawan) VALUES ("'.$_POST['_judul'].'","'.$_POST['_isi'].'",1)');
-}
 ?>
+
+<script type="text/javascript">
+	$(document).ready(
+		$("#list").tablesorter();
+		$("#list").tablesorter( {sortList: [[0,0], [1,0]]} ); 
+	);
+</script>
+
 <div class="topbar">
 	<div class="fill">
 		<div class="container">
@@ -32,7 +36,6 @@ if ($_POST)
 	</div>
 </div>
 
-
 <div class="container">
 
 	<div class="content">
@@ -41,23 +44,32 @@ if ($_POST)
 		</div>
 		<div class="row">
 			<div class="span12">
-				<h2>Input Berita</h2>
-				<form name="berita" action="" method="post">
-					<ul>
-						<li>
-							<label>Judul</label>
-							<input type="text" name="_judul" placeholder="Judul berita">
-						</li>
-						<li>
-							<label>Isi</label>
-							<textarea name="_isi" rows="5" placeholder="Isi berita"></textarea>
-						</li>
-					</ul>
-					<div align="center">
-						<input type="submit" class="btn primary" value="Simpan Berita">
-						<a href="wartawan.php" class="btn">Cancel</a>
-					</div>
-				</form>
+				<h2>Daftar  Berita</h2>
+				<table class="bordered-table tablesorter" id="list">
+					<thead>
+					<tr>
+						
+						<th width="3%">No</th>
+						<th width="30%">Judul</th>
+						<th>Isi</th>
+						<th width="5%">Action</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr>
+						<td>1</td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>2</td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					</tbody>
+				</table>
 			</div>
 			<div class="span4">
 				<h3>Menu</h3>
