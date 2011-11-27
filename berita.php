@@ -35,19 +35,18 @@ $idx = $_GET['idx'];
 	<div class="row">
 		<div class="span16">
 			<ul class="news-ticker" id="news">
-				<?php $data=null;$item=null; $data = $DB->get_all('SELECT * FROM berita ORDER BY tanggal_publikasi LIMIT 10'); ?>
-				<?php foreach ($data as $item):?>
+				<?php $data_news_ticker = $DB->get_all('SELECT * FROM berita ORDER BY tanggal_publikasi LIMIT 10'); ?>
+				<?php foreach ($data_news_ticker as $item):?>
 				<li><a href="berita.php?idx=<?php echo $item->idx ?>"><?php echo substr($item->judul,0,150) ?></a></li>
-				<?php endforeach?>
+				<?php endforeach; ?>
 			</ul>
 		</div>
 	</div>
 	<div class="row">
-		<?php $data=null;$item=null; $data = $DB->get_all('SELECT * FROM berita WHERE idx='.$idx); ?>
 		<div class="span10">
-			<h2><?php echo $item->judul ?></h2>
-			<p><?php echo $item->isi ?></p>
-			<p>
+			<?php $data_berita = $DB->get_all('SELECT * FROM berita WHERE idx='.$idx); ?>
+			<h2><?php echo $data_berita[0]->judul ?></h2>
+			<p><?php echo $data_berita[0]->isi ?></p>
 			<h4>Komentar</h4>
 			<form>
 				<ul>
@@ -73,7 +72,7 @@ $idx = $_GET['idx'];
 					</li>
 				</ul>
 			</form>
-			<?php $data=null;$item=null; $data = $DB->get_all('SELECT * FROM komentar WHERE id_berita='. $idx); ?>
+			<?php $data_komentar = $DB->get_all('SELECT * FROM komentar WHERE id_berita='. $idx); ?>
 			<table>
 				<thead>
 					<tr>
@@ -82,23 +81,21 @@ $idx = $_GET['idx'];
 					</tr>
 				</thead>
 				<tbody>
-					<?php foreach ($data as $item):?>
+					<?php foreach ($data_komentar as $item):?>
 					<tr>
 						<td><a href="<?php echo $item->website ?>"><?php echo $item->nama ?></a></td>
 						<td><?php echo $item->komentar ?></td>
 					</tr>
-					<?php endforeach?>
+					<?php endforeach; ?>
 				</tbody>
 			</table>
 			</p>
 		</div>
 		<div class="span6">
-			<?php $data=null;$item=null; $data = $DB->get_all('SELECT idx,judul FROM berita ORDER BY tanggal_publikasi LIMIT 10');
-			#var_dump($data);
-			?>
+			<?php $data_recent_news = $DB->get_all('SELECT idx,judul FROM berita ORDER BY tanggal_publikasi LIMIT 10'); ?>
 			<h2>Recent articles</h2>
 			<ul>
-				<?php foreach ($data as $item):?>
+				<?php foreach ($data_recent_news as $item):?>
 				<li>
 					<a href="berita.php?idx=<?php echo $item->idx ?>"><?php echo substr($item->judul,0,100) ?></a>
 				</li>
