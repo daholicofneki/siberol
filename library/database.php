@@ -74,7 +74,7 @@ class Database {
                         try
                         {
                                 $query = mysql_query ($SQL);
-                                if  ( ! ($query AND  mysql_num_rows($query)) )
+                                if  ( ! $query)
                                 {
                                         throw new Exception ('Query Gagal');
                                 }
@@ -99,18 +99,25 @@ class Database {
          * @param       string
          * @return      void
          */
-        public function get_all ( $SQL = FALSE )
+        public function get ( $SQL = FALSE , $tipe = 'all')
         {
                 if ($SQL)
                 {
                         $SQL = $this->query ($SQL);
-                        if ( $SQL )
+                        if ( $SQL AND  mysql_num_rows($SQL) > 0 )
                         {
-                                while ($row = mysql_fetch_object ($SQL))
+                                if ($tipe === 'all')
                                 {
-                                        $this->arr[] = $row;
+                                        while ($row = mysql_fetch_object ($SQL))
+                                        {
+                                                $this->arr[] = $row;
+                                        }
+                                        return $this->arr;
                                 }
-                                return $this->arr;
+                                else
+                                {
+                                        return mysql_fetch_object ($SQL);
+                                }
                         }
                        
                 }

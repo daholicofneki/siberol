@@ -1,13 +1,13 @@
 <html>
 	<head>
 		<title>Wartawan - Input Berita</title>
-		<link href="public/css/bootstrap.min.css" media="screen" rel="stylesheet" type="text/css" />
-		<link href="public/css/custom.css" media="screen" rel="stylesheet" type="text/css" />
-		<script src="public/js/jquery-1.7.min.js" type="text/javascript"></script>
+		<link href="../public/css/bootstrap.min.css" media="screen" rel="stylesheet" type="text/css" />
+		<link href="../public/css/custom.css" media="screen" rel="stylesheet" type="text/css" />
+		<script src="../public/js/jquery-1.7.min.js" type="text/javascript"></script>
 	</head>
 	<body>
 <?php
-require_once ('library/config.php');
+require_once ('../library/config.php');
 if ($_POST)
 {
 	$db = new database();
@@ -18,7 +18,7 @@ if ($_POST)
 <div class="topbar">
 	<div class="fill">
 		<div class="container">
-			<a class="brand" href="#">Project name</a>
+			<a class="brand" href="#"><?php echo PROJECT ?></a>
 			<ul class="nav">
 				<li class="active"><a href="#">Home</a></li>
 				<li><a href="#about">About</a></li>
@@ -38,7 +38,7 @@ if ($_POST)
 
 	<div class="content">
 		<div class="page-header">
-			<h1>SIBEROL <small>Sistem Berita Online</small></h1>
+			<?php echo TITLE ?>
 		</div>
 		<div class="row">
 			<div class="span12">
@@ -70,7 +70,7 @@ if ($_POST)
 		</div>
 
 		<footer>
-			<p>&copy; Neki, Nurvina - Server Side Scripting 2011</p>
+			<p><?php echo FOOTER ?></p>
 		</footer>
 	</div>
 

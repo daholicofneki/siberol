@@ -1,16 +1,16 @@
 <html>
 	<head>
 		<title>Wartawan - Daftar Berita</title>
-		<link href="public/css/bootstrap.min.css" media="screen" rel="stylesheet" type="text/css" />
-		<link href="public/css/custom.css" media="screen" rel="stylesheet" type="text/css" />
-		<script src="public/js/jquery-1.7.min.js" type="text/javascript"></script>
-		<script src="public/js/jquery.tablesorter.min.js" type="text/javascript"></script>
+		<link href="../public/css/bootstrap.min.css" media="screen" rel="stylesheet" type="text/css" />
+		<link href="../public/css/custom.css" media="screen" rel="stylesheet" type="text/css" />
+		<script src="../public/js/jquery-1.7.min.js" type="text/javascript"></script>
+		<script src="../public/js/jquery.tablesorter.min.js" type="text/javascript"></script>
 	</head>
 	<body>
 <?php
-require_once ('library/config.php');
-$data = $DB->get_all('SELECT * FROM berita');
-$no =1;
+require_once ('../library/config.php');
+$data = $DB->get('SELECT * FROM berita', 'all');
+$no = 1;
 ?>
 
 <script type="text/javascript">
@@ -23,7 +23,7 @@ $no =1;
 <div class="topbar">
 	<div class="fill">
 		<div class="container">
-			<a class="brand" href="#">Project name</a>
+			<a class="brand" href="#"><?php echo PROJECT ?></a>
 			<ul class="nav">
 				<li class="active"><a href="#">Home</a></li>
 				<li><a href="#about">About</a></li>
@@ -42,7 +42,7 @@ $no =1;
 
 	<div class="content">
 		<div class="page-header">
-			<h1>SIBEROL <small>Sistem Berita Online</small></h1>
+			<?php echo TITLE ?>
 		</div>
 		<div class="row">
 			<div class="span12">
@@ -84,7 +84,7 @@ $no =1;
 		</div>
 
 		<footer>
-			<p>&copy; Neki, Nurvina - Server Side Scripting 2011</p>
+			<p><?php echo FOOTER ?></p>
 		</footer>
 	</div>
 
