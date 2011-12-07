@@ -127,5 +127,6 @@ class Database {
 
 /*  End class Database  */
 $DB = new Database ();
+$DB2 = new Database ();
 //$DB->show_host();
 //print_r ($DB->get_all("SELECT * FROM berita WHERE status='1'"));
