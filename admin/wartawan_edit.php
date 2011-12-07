@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>Wartawan - Input Berita</title>
+		<title>Wartawan - Edit Berita</title>
 		<link href="../public/css/bootstrap.min.css" media="screen" rel="stylesheet" type="text/css" />
 		<link href="../public/css/custom.css" media="screen" rel="stylesheet" type="text/css" />
 		<script src="../public/js/jquery-1.7.min.js" type="text/javascript"></script>
@@ -47,7 +47,6 @@
 			username : "Some User",
 			staffid : "991234"
 		}
-
 	});
 </script>
 
@@ -55,12 +54,27 @@
 	<body>
 <?php
 require_once ('../library/config.php');
+
 if ($_POST)
 {
-	$DB->query ('INSERT INTO berita (judul,isi,kategori,id_wartawan)
-		    VALUES ("'.$_POST['_judul'].'","'.$_POST['_isi'].'","'.$_POST['cboKategori'].'","'.$_SESSION['ID'].'")');
+	//if ( $_POST['action'] == 'update' )
+	//{
+		$DB->query ('UPDATE berita SET
+				judul		= "'.$_POST['_judul'].'",
+				isi		= "'.$_POST['_isi'].'",
+				kategori	= "'.$_POST['cboKategori'].'",
+				id_wartawan	= "'.$_SESSION['ID'].'"
+			       WHERE idx = '. $_GET['idx']
+			      );
+	/*}
+	else if ( $_POST['action'] == 'delete' )
+	{
+		$DB->query ('DELETE FROM berita WHERE idx = '. $_GET['idx']);
+	}*/
 	header( 'Location:wartawan.php' );
 }
+
+$data = $DB->get ('SELECT * FROM berita WHERE idx = '. $_GET['idx'] , 'one');
 ?>
 
 <?php require_once('../library/admin_menu.php') ?>
@@ -73,28 +87,30 @@ if ($_POST)
 		</div>
 		<div class="row">
 			<div class="span12">
-				<h2>Input Berita</h2>
+				<h2>Edit Berita</h2>
 				<form name="berita" action="" method="post">
+					<input type="hidden" name="action">
 					<ul>
 						<li>
-							<input type="text" name="_judul" style="width:100%; height:50px" placeholder="Judul berita">
+							<input type="text" name="_judul" style="width:100%; height:50px" placeholder="Judul berita" value="<?php echo $data->judul ?>">
 						</li>
 						<li>
 							<label>Kategori Berita</label>
-							<select name="cboKategori">
-								<option value="Umum">Umum</option>
-								<option value="Hidup Sehat">Hidup Sehat</option>
-								<option value="Diabetes">Diabetes</option>
-								<option value="Hipertensi">Hipertensi</option>
-								<option value="Ibu & Anak">Ibu & Anak</option>
+							<select name="cboKategori" id="cboKategori">
+								<option value="Umum"<?php echo ($data->kategori == 'Umum') ? ' selected': '' ?>>Umum</option>
+								<option value="Hidup Sehat"<?php echo ($data->kategori == 'Hidup Sehat') ? ' selected': '' ?>>Hidup Sehat</option>
+								<option value="Diabetes"<?php echo ($data->kategori == 'Diabetes') ? ' selected': '' ?>>Diabetes</option>
+								<option value="Hipertensi"<?php echo ($data->kategori == 'Hipertensi') ? ' selected': '' ?>>Hipertensi</option>
+								<option value="Ibu & Anak"<?php echo ($data->kategori == 'Ibu & Anak') ? ' selected': '' ?>>Ibu & Anak</option>
 							</select>
 						</li>
 						<li>
-							<textarea id="elm1" name="_isi" rows="25" style="width: 80%"></textarea>
+							<textarea id="elm1" name="_isi" rows="25" style="width: 80%"><?php echo $data->isi ?></textarea>
 						</li>
 					</ul>
 					<div align="center">
-						<input type="submit" class="btn primary" value="Simpan Berita">
+						<input type="submit" class="btn primary" value="Update Berita">
+						<input type="submit" class="btn danger" value="Hapus">
 						<a href="wartawan.php" class="btn">Kembali</a>
 					</div>
 				</form>

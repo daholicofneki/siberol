@@ -9,7 +9,7 @@
 	<body>
 <?php
 require_once ('../library/config.php');
-$data = $DB->get('SELECT * FROM berita', 'all');
+$data = $DB->get('SELECT * FROM berita WHERE id_wartawan = "'. $_SESSION['ID'] .'"', 'all');
 $no = 1;
 ?>
 
@@ -20,23 +20,7 @@ $no = 1;
 	);
 </script>
 
-<div class="topbar">
-	<div class="fill">
-		<div class="container">
-			<a class="brand" href="#"><?php echo PROJECT ?></a>
-			<ul class="nav">
-				<li class="active"><a href="#">Home</a></li>
-				<li><a href="#about">About</a></li>
-				<li><a href="#contact">Contact</a></li>
-			</ul>
-			<form action="" class="pull-right">
-				<input class="input-small" type="text" placeholder="Username">
-				<input class="input-small" type="password" placeholder="Password">
-				<button class="btn" type="submit">Sign in</button>
-			</form>
-		</div>
-	</div>
-</div>
+<?php require_once('../library/admin_menu.php') ?>
 
 <div class="container">
 
@@ -64,10 +48,7 @@ $no = 1;
 						<td><?php echo $no++ ?></td>
 						<td><?php echo $item->judul ?></td>
 						<td><?php echo substr($item->isi,0,500).'...' ?></td>
-						<td>
-							<a class="i-edit" href="wartawan_edit.php">&nbsp; Edit</a>
-							<a class="i-cross" href="#">&nbsp; Delete</a>
-						</td>
+						<td><a class="i-edit" href="wartawan_edit.php?idx=<?php echo $item->idx ?>">&nbsp; Edit</a></td>
 					</tr>
 					<?php endforeach?>
 					<?php endif?>

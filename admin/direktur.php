@@ -12,22 +12,7 @@ $data = $DB->get('SELECT * FROM berita', 'all');
 $no =1;
 ?>
 
-<div class="topbar">
-	<div class="fill">
-		<div class="container">
-			<a class="brand" href="#"><?php echo PROJECT ?></a>
-			<form action="" method="POST" class="pull-right">
-			<?php if( empty($_SESSION['ID']) && $_SESSION['ID'] == '' ) { ?>
-				<input class="input-small" type="text" name="username" placeholder="Username">
-				<input class="input-small" type="password" name="password" placeholder="Password">
-				<button class="btn" type="submit">Sign in</button>
-			<?php } else { ?>
-				<a href="#">Welcome <b><?php echo $_SESSION['ID'] ?></b></a> | <a href="logout.php">Logout</a>
-			<?php } ?>
-			</form>
-		</div>
-	</div>
-</div>
+<?php require_once('../library/admin_menu.php') ?>
 
 <div class="container">
 
@@ -48,6 +33,7 @@ $no =1;
 					<tr>
 						<td>
 							<select name="cboFilter">
+								<option value="all">== ALL ==</option>
 								<option value="approved">Approved</option>
 								<option value="pending">Pending</option>
 								
@@ -55,6 +41,7 @@ $no =1;
 						</td>
 						<td>
 							<select name="cboCategory">
+								<option value="all">== ALL ==</option>
 								<option value="Hidup Sehat">Hidup Sehat</option>
 								<option value="Diabetes">Diabetes</option>
 								<option value="Hipertensi">Hipertensi</option>
