@@ -24,9 +24,9 @@ if ( isset($_POST['username']) && $_POST['username'] ) {
 		$_SESSION['AUTH'] = $data->level;
 
 		if ( $data->level == 'Direktur' )
-			header( 'Location:admin/direktur.php' );
+			header( 'Location:direktur.php' );
 		else if ( $data->level == 'Wartawan' )
-			header( 'Location:admin/wartawan.php' );
+			header( 'Location:wartawan.php' );
 	}
 }
 ?>
