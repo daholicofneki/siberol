@@ -1,7 +1,3 @@
-<?php
-require_once ('library/config.php');
-$data = $DB->get_all('SELECT * FROM berita ORDER BY tanggal_publikasi LIMIT 5');
-?>
 <html>
 	<head>
 		<title></title>
@@ -26,6 +22,12 @@ $data = $DB->get_all('SELECT * FROM berita ORDER BY tanggal_publikasi LIMIT 5');
 	);
 </script>
 
+<?php
+require_once ('library/config.php');
+
+$data = $DB->get('SELECT * FROM berita WHERE tanggal_tayang_dari >= CURRENT_DATE AND tanggal_tayang_dari <= CURRENT_DATE', 'all');
+?>
+
 <div class="container">
 
 	<!-- Main hero unit for a primary marketing message or call to action -->
@@ -37,21 +39,26 @@ $data = $DB->get_all('SELECT * FROM berita ORDER BY tanggal_publikasi LIMIT 5');
 	<div class="row">
 		<div class="span16">
 			<ul class="news-ticker" id="news">
+				<?php if ( count($data) > 0 ):?>
 				<?php foreach ($data as $item):?>
 				<li><a href="berita.php?idx=<?php echo $item->idx ?>"><?php echo substr($item->judul,0,150) ?></a></li>
-				<?php endforeach?>
+				<?php endforeach ?>
+				<?php else: ?>
+				<li>Tidak ada berita yang ditampilkan</li>
+				<?php endif ?>
 			</ul>
 		</div>
 	</div>
 	<div class="row">
 		<div class="span6">
-			<h2>Categories</h2>
-			<p>Etiam porta sem malesuada magna mollis euismod. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.</p>
-			<p><a class="btn" href="#">View details &raquo;</a></p>
+			<h2>About Us</h2>
+			<p>Website ini merupakan tugas mata kuliah Server Side Scripting tahun ajaran 2011/2012.</p>
+			<p><a class="btn" href="about.php">View details &raquo;</a></p>
 		</div>
 		<div class="span10">
 			<h2>Recent articles</h2>
 			<ul>
+				<?php if ( count($data) > 0 ):?>
 				<?php foreach ($data as $item):?>
 				<li>
 					<a href="berita.php?idx=<?php echo $item->idx ?>">
@@ -60,12 +67,15 @@ $data = $DB->get_all('SELECT * FROM berita ORDER BY tanggal_publikasi LIMIT 5');
 					</a>
 				</li>
 				<?php endforeach?>
+				<?php else: ?>
+				<li>Tidak ada berita yang ditampilkan</li>
+				<?php endif ?>
 			</ul>
 		</div>
 	</div>
 	
 	<footer>
-	<p>&copy; Neki, Nurvina - Server Side Scripting 2011</p>
+		<p><?php echo FOOTER ?></p>
 	</footer>
 
 </div>

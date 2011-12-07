@@ -18,7 +18,9 @@ ul.news-ticker a{
 ul.news-ticker a:hover {
     color:#D35629;
 }
-
+p {
+    padding:10px 0;
+}
 form { margin: 10px 0;}
 form ul { padding-top: 10px} 
 form ul li { list-style : none; min-height: 33px; display: block; margin:3px 0; padding:0;}
