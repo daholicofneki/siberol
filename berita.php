@@ -1,7 +1,3 @@
-<?php
-require_once ('library/config.php');
-$idx = $_GET['idx'];
-?>
 <html>
 	<head>
 		<title></title>
@@ -26,6 +22,17 @@ $idx = $_GET['idx'];
 	);
 </script>
 
+<?php
+require_once ('library/config.php');
+
+if ( isset($_POST) && count($_POST) > 0 )
+{
+	$DB->query ('INSERT INTO komentar (nama,email,website,komentar,id_berita)
+		    VALUES ("'.$_POST['_nama'].'", "'.$_POST['_email'].'", "'.$_POST['_website'].'", "'.$_POST['_komentar'].'", '.$_GET['idx'].')');
+	header( 'Location:berita.php?idx=' . $_GET['idx'] );
+}
+?>
+
 <div class="container">
 
 	<div class="hero-unit">
@@ -35,53 +42,56 @@ $idx = $_GET['idx'];
 	<div class="row">
 		<div class="span16">
 			<ul class="news-ticker" id="news">
-				<?php $data_news_ticker = $DB->get_all('SELECT * FROM berita ORDER BY tanggal_publikasi LIMIT 10'); ?>
+				<?php $data_news_ticker = $DB->get('SELECT * FROM berita WHERE tanggal_tayang_dari >= CURRENT_DATE AND tanggal_tayang_dari <= CURRENT_DATE', 'all'); ?>
 				<?php foreach ($data_news_ticker as $item):?>
 				<li><a href="berita.php?idx=<?php echo $item->idx ?>"><?php echo substr($item->judul,0,150) ?></a></li>
 				<?php endforeach; ?>
 			</ul>
 		</div>
 	</div>
+
 	<div class="row">
-		<div class="span10">
-			<?php $data_berita = $DB->get_all('SELECT * FROM berita WHERE idx='.$idx); ?>
-			<h2><?php echo $data_berita[0]->judul ?></h2>
-			<p><?php echo $data_berita[0]->isi ?></p>
+		<div class="span16">
+			<?php $data_berita = $DB->get ('SELECT * FROM berita WHERE idx=' . $_GET['idx'], 'one'); ?>
+			<h2><?php echo $data_berita->judul ?></h2>
+			<p><?php echo $data_berita->isi ?></p>
 			<h4>Komentar</h4>
-			<form>
+			<form method="POST">
 				<ul>
 					<li>
 						<label>Nama</label>
-						<input type="text" name="_nama">
+						<input type="text" name="_nama" placeholder="Masukkan nama">
 					</li>
 					<li>
 						<label>E-mail</label>
-						<input type="text" name="_email">
+						<input type="text" name="_email" placeholder="Masukkan alamat email"> * <i>tidak akan di publish</i>
 					</li>
 					<li>
 						<label>Website</label>
-						<input type="text" name="_website">
+						<input type="text" name="_website" placeholder="Masukkan website">
 					</li>
 					<li>
 						<label>Komentar</label>
-						<textarea name="_komentar"></textarea>
+						<textarea name="_komentar" style="width:50%" rows="5"></textarea>
 					</li>
 					<li>
 						<label></label>
 						<input type="submit" class="btn primary" value="Kirim">
 					</li>
 				</ul>
-			</form>
-			<?php $data_komentar = $DB->get_all('SELECT * FROM komentar WHERE id_berita='. $idx); ?>
+			</form><br />
+			<?php $data_komentar = $DB2->get ('SELECT * FROM komentar WHERE id_berita='. $_GET['idx'] , 'all'); ?>
+			<?php if ( count($data_komentar) > 0 ): ?>
 			<table>
 				<thead>
 					<tr>
-						<td width="15%">Nama</td>
+						<td width="20%">Nama</td>
 						<td>Komentar</td>
 					</tr>
 				</thead>
 				<tbody>
-					<?php foreach ($data_komentar as $item):?>
+					
+					<?php foreach ($data_komentar as $item): ?>
 					<tr>
 						<td><a href="<?php echo $item->website ?>"><?php echo $item->nama ?></a></td>
 						<td><?php echo $item->komentar ?></td>
@@ -89,23 +99,12 @@ $idx = $_GET['idx'];
 					<?php endforeach; ?>
 				</tbody>
 			</table>
-			</p>
-		</div>
-		<div class="span6">
-			<?php $data_recent_news = $DB->get_all('SELECT idx,judul FROM berita ORDER BY tanggal_publikasi LIMIT 10'); ?>
-			<h2>Recent articles</h2>
-			<ul>
-				<?php foreach ($data_recent_news as $item):?>
-				<li>
-					<a href="berita.php?idx=<?php echo $item->idx ?>"><?php echo substr($item->judul,0,100) ?></a>
-				</li>
-				<?php endforeach?>
-			</ul>
+			<?php endif ?>
 		</div>
 	</div>
 	
 	<footer>
-	<p>&copy; Neki, Nurvina - Server Side Scripting 2011</p>
+		<p><?php echo FOOTER ?></p>
 	</footer>
 
 </div>
