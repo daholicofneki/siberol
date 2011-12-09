@@ -11,7 +11,7 @@
 <div class="container">
 
 	<div class="hero-unit">
-		<h1>Heath Info</h1>
+		<h1><a href="index.php">Heath Info</a></h1>
 	</div>
 
 	<div class="row">

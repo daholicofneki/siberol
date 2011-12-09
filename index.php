@@ -32,7 +32,7 @@ $data = $DB->get('SELECT * FROM berita WHERE tanggal_tayang_dari >= CURRENT_DATE
 
 	<!-- Main hero unit for a primary marketing message or call to action -->
 	<div class="hero-unit">
-		<h1>Heath Info</h1>
+		<h1><a href="index.php">Heath Info</a></h1>
 	</div>
 
 	<!-- Example row of columns -->
