@@ -8,7 +8,7 @@
 				<input class="input-small" type="password" name="password" placeholder="Password">
 				<button class="btn" type="submit">Sign in</button>
 			<?php } else { ?>
-				<a href="#">Welcome <b><?php echo $_SESSION['ID'] ?> ( <?php echo $_SESSION['NAME'] ?> )</b></a> | <a href="logout.php">Logout</a>
+				<a href="<?php echo strtolower($_SESSION['auth']).'.php' ?>">Welcome <b><?php echo $_SESSION['ID'] ?> ( <?php echo $_SESSION['NAME'] ?> )</b></a> | <a href="logout.php">Logout</a>
 			<?php } ?>
 			</form>
 		</div>
