@@ -31,22 +31,7 @@ if ( isset($_POST['username']) && $_POST['username'] ) {
 }
 ?>
 
-<div class="topbar">
-	<div class="fill">
-		<div class="container">
-			<a class="brand" href="#"><?php echo PROJECT ?></a>
-			<form action="" method="POST" class="pull-right">
-			<?php if( empty($_SESSION['ID']) ) { ?>
-				<input class="input-small" type="text" name="username" placeholder="Username">
-				<input class="input-small" type="password" name="password" placeholder="Password">
-				<button class="btn" type="submit">Sign in</button>
-			<?php } else { ?>
-				<a href="#">Welcome <b><?php echo $_SESSION['ID'] ?></b></a> | <a href="logout.php">Logout</a>
-			<?php } ?>
-			</form>
-		</div>
-	</div>
-</div>
+<?php require_once('../library/admin_menu.php') ?>
 
 <div class="container">
 	<div class="content">

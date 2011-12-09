@@ -1,3 +1,67 @@
+<?php
+// Authority
+require_once ('../library/config.php');
+if ($_SESSION['AUTH'] !== 'Wartawan') header('Location: ../index.php');
+
+// Get POST Action
+if ($_POST)
+{
+	if ( $_POST['action'] == 'update_article' )
+	{
+
+		if ( isset ($_FILES) )
+		{
+			$img = array();
+			$img["nama"] = $_FILES['gambar']['name'];
+			$img["lokasi"] = $_FILES['gambar']['tmp_name'];
+			$img["tipe"] = $_FILES['gambar']['type'];
+			$img["ukuran"] = $_FILES['gambar']['size'];
+	
+			$dir_img = 'public/image/upload/' . $img["nama"];
+			move_uploaded_file($img["lokasi"], $dir_img);
+		}
+		else
+		{
+			$dir_img = '';
+		}
+
+		$DB->query ('UPDATE berita SET
+				judul		= "'.$_POST['_judul'].'",
+				isi		= "'.$_POST['_isi'].'",
+				kategori	= "'.$_POST['cboKategori'].'",
+				id_wartawan	= "'.$_SESSION['ID'].'",
+				gambar		= "'.$dir_img.'"
+			       WHERE idx = '. $_GET['idx']
+			      );
+	}
+	else if ( $_POST['action'] == 'delete_article' )
+	{
+		$DB->query ('DELETE FROM berita WHERE idx = '. $_GET['idx']);
+		header( 'Location:wartawan.php' );
+	}
+	else if ( $_POST['action'] == 'delete_image_article' )
+	{
+		$DB->query ('UPDATE berita SET gambar = "" WHERE idx = '. $_GET['idx']);
+	}
+	
+}
+
+// Check validitity url
+if ( empty($_GET['idx']) )
+{
+	header( 'Location:wartawan.php' );
+}
+else
+{
+	$data = $DB->get ('SELECT * FROM berita WHERE idx = '. $_GET['idx'] , 'one');
+
+	// If data == null
+	if ( $data == null )
+	{
+		header( 'Location:wartawan.php' );
+	}
+}
+?>
 <html>
 	<head>
 		<title>Wartawan - Edit Berita</title>
@@ -52,30 +116,6 @@
 
 	</head>
 	<body>
-<?php
-require_once ('../library/config.php');
-
-if ($_POST)
-{
-	//if ( $_POST['action'] == 'update' )
-	//{
-		$DB->query ('UPDATE berita SET
-				judul		= "'.$_POST['_judul'].'",
-				isi		= "'.$_POST['_isi'].'",
-				kategori	= "'.$_POST['cboKategori'].'",
-				id_wartawan	= "'.$_SESSION['ID'].'"
-			       WHERE idx = '. $_GET['idx']
-			      );
-	/*}
-	else if ( $_POST['action'] == 'delete' )
-	{
-		$DB->query ('DELETE FROM berita WHERE idx = '. $_GET['idx']);
-	}*/
-	header( 'Location:wartawan.php' );
-}
-
-$data = $DB->get ('SELECT * FROM berita WHERE idx = '. $_GET['idx'] , 'one');
-?>
 
 <?php require_once('../library/admin_menu.php') ?>
 
@@ -88,31 +128,40 @@ $data = $DB->get ('SELECT * FROM berita WHERE idx = '. $_GET['idx'] , 'one');
 		<div class="row">
 			<div class="span12">
 				<h2>Edit Berita</h2>
-				<form name="berita" action="" method="post">
-					<input type="hidden" name="action">
-					<ul>
-						<li>
-							<input type="text" name="_judul" style="width:100%; height:50px" placeholder="Judul berita" value="<?php echo $data->judul ?>">
-						</li>
-						<li>
-							<label>Kategori Berita</label>
-							<select name="cboKategori" id="cboKategori">
-								<option value="Umum"<?php echo ($data->kategori == 'Umum') ? ' selected': '' ?>>Umum</option>
-								<option value="Hidup Sehat"<?php echo ($data->kategori == 'Hidup Sehat') ? ' selected': '' ?>>Hidup Sehat</option>
-								<option value="Diabetes"<?php echo ($data->kategori == 'Diabetes') ? ' selected': '' ?>>Diabetes</option>
-								<option value="Hipertensi"<?php echo ($data->kategori == 'Hipertensi') ? ' selected': '' ?>>Hipertensi</option>
-								<option value="Ibu & Anak"<?php echo ($data->kategori == 'Ibu & Anak') ? ' selected': '' ?>>Ibu & Anak</option>
-							</select>
-						</li>
-						<li>
-							<textarea id="elm1" name="_isi" rows="25" style="width: 80%"><?php echo $data->isi ?></textarea>
-						</li>
-					</ul>
-					<div align="center">
-						<input type="submit" class="btn primary" value="Update Berita">
-						<input type="submit" class="btn danger" value="Hapus">
-						<a href="wartawan.php" class="btn">Kembali</a>
-					</div>
+				<form name="berita" id="berita" action="" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="action" id="action">
+				<ul>
+					<li>
+						<input type="text" name="_judul" style="width:100%; height:50px" placeholder="Judul berita" value="<?php echo $data->judul ?>">
+					</li>
+					<li>
+						<label>Kategori Berita</label>
+						<select name="cboKategori" id="cboKategori">
+							<option value="Umum"<?php echo ($data->kategori == 'Umum') ? ' selected': '' ?>>Umum</option>
+							<option value="Hidup Sehat"<?php echo ($data->kategori == 'Hidup Sehat') ? ' selected': '' ?>>Hidup Sehat</option>
+							<option value="Diabetes"<?php echo ($data->kategori == 'Diabetes') ? ' selected': '' ?>>Diabetes</option>
+							<option value="Hipertensi"<?php echo ($data->kategori == 'Hipertensi') ? ' selected': '' ?>>Hipertensi</option>
+							<option value="Ibu & Anak"<?php echo ($data->kategori == 'Ibu & Anak') ? ' selected': '' ?>>Ibu & Anak</option>
+						</select>
+					</li>
+					<li>
+						<label>Gambar</label>
+						<?php if( $data->gambar != '' ): ?>
+							<img src="../<?php echo $data->gambar ?>">
+							<input type="submit" name="btnDeleteImage" id="btnDeleteImage" class="btn danger" value="Hapus Gambar">
+						<?php else: ?>
+							<input type="file" name="gambar"> * <i>Image only, max 100kb</i>
+						<?php endif; ?>
+					</li>
+					<li>
+						<textarea id="elm1" name="_isi" rows="25" style="width: 80%"><?php echo $data->isi ?></textarea>
+					</li>
+				</ul>
+				<div align="center">
+					<input type="submit" name="btnUpdate" id="btnUpdate" class="btn primary" value="Update Berita">
+					<input type="submit" name="btnDelete" id="btnDelete" class="btn danger" value="Hapus">
+					<a href="wartawan.php" class="btn">Kembali</a>
+				</div>
 				</form>
 			</div>
 			<div class="span4">
@@ -130,6 +179,25 @@ $data = $DB->get ('SELECT * FROM berita WHERE idx = '. $_GET['idx'] , 'one');
 	</div>
 
 </div>
+
+<script language="javascript">
+$(document).ready(
+	function(){
+		$('#btnUpdate').click(function() {
+			$('#action').val('update_article');
+			$('#berita').submit();
+		});
+		$('#btnDelete').click(function() {
+			$('#action').val('delete_article');
+			$('#berita').submit();
+		});
+		$('#btnDeleteImage').click(function() {
+			$('#action').val('delete_image_article');
+			$('#berita').submit();
+		});
+	}
+);
+</script>
 
 	</body>
 </html>

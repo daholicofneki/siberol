@@ -1,3 +1,12 @@
+<?php
+// Authority
+require_once ('../library/config.php');
+if ($_SESSION['AUTH'] !== 'Direktur') header('Location: ../index.php');
+
+// Query
+$data = $DB->get('SELECT * FROM berita', 'all');
+$no =1;
+?>
 <html>
 	<head>
 		<title>Direktur - Daftar Berita</title>
@@ -6,11 +15,6 @@
 		<script src="../public/js/jquery-1.7.min.js" type="text/javascript"></script>
 	</head>
 	<body>
-<?php
-require_once ('../library/config.php');
-$data = $DB->get('SELECT * FROM berita', 'all');
-$no =1;
-?>
 
 <?php require_once('../library/admin_menu.php') ?>
 

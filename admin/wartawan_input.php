@@ -1,9 +1,45 @@
+<?php
+// Authority
+require_once ('../library/config.php');
+if ($_SESSION['AUTH'] !== 'Wartawan') header('Location: ../index.php');
+
+// Get POST Action
+if ( isset($_POST['btnSubmit']) )
+{
+	$img = array();
+	$img["nama"] = $_FILES['gambar']['name'];
+	$img["lokasi"] = $_FILES['gambar']['tmp_name'];
+	$img["tipe"] = $_FILES['gambar']['type'];
+	$img["ukuran"] = $_FILES['gambar']['size'];
+
+	if ((($img["tipe"] == "image/gif")
+	|| ($img["tipe"] == "image/png")
+	|| ($img["tipe"] == "image/jpeg")
+	|| ($img["tipe"] == "image/pjpeg"))
+	&& ($img["tipe"] < 100000))
+	{
+		$dir_img = 'public/image/upload/' . $img["nama"];
+		move_uploaded_file($img["lokasi"], $dir_img);
+	}
+	else
+	{
+		$dir_img = '';
+	}
+
+	$DB->query ('INSERT INTO berita (judul,isi,kategori,id_wartawan,gambar)
+		     VALUES ("'.$_POST['_judul'].'","'.$_POST['_isi'].'","'.$_POST['cboKategori'].'","'.$_SESSION['ID'].'","'.$dir_img.'")');
+	header( 'Location:wartawan.php' );
+}
+?>
 <html>
 	<head>
 		<title>Wartawan - Input Berita</title>
 		<link href="../public/css/bootstrap.min.css" media="screen" rel="stylesheet" type="text/css" />
 		<link href="../public/css/custom.css" media="screen" rel="stylesheet" type="text/css" />
+		<link href="../public/css/jquery-ui-1.8.16.custom.css" media="screen" rel="stylesheet" type="text/css" />
+
 		<script src="../public/js/jquery-1.7.min.js" type="text/javascript"></script>
+		<script src="../public/js/jquery-ui-1.8.16.custom.min.js" type="text/javascript"></script>
 		<script src="../public/js/tiny_mce/tiny_mce.js" type="text/javascript"></script>
 <script type="text/javascript">
 	tinyMCE.init({
@@ -53,15 +89,6 @@
 
 	</head>
 	<body>
-<?php
-require_once ('../library/config.php');
-if ($_POST)
-{
-	$DB->query ('INSERT INTO berita (judul,isi,kategori,id_wartawan)
-		    VALUES ("'.$_POST['_judul'].'","'.$_POST['_isi'].'","'.$_POST['cboKategori'].'","'.$_SESSION['ID'].'")');
-	header( 'Location:wartawan.php' );
-}
-?>
 
 <?php require_once('../library/admin_menu.php') ?>
 
@@ -74,7 +101,7 @@ if ($_POST)
 		<div class="row">
 			<div class="span12">
 				<h2>Input Berita</h2>
-				<form name="berita" action="" method="post">
+				<form name="berita" action="" method="post" enctype="multipart/form-data">
 					<ul>
 						<li>
 							<input type="text" name="_judul" style="width:100%; height:50px" placeholder="Judul berita">
@@ -90,11 +117,15 @@ if ($_POST)
 							</select>
 						</li>
 						<li>
+							<label>Gambar</label>
+							<input type="file" name="gambar"> * <i>Image only, max 100kb</i>
+						</li>
+						<li>
 							<textarea id="elm1" name="_isi" rows="25" style="width: 80%"></textarea>
 						</li>
 					</ul>
 					<div align="center">
-						<input type="submit" class="btn primary" value="Simpan Berita">
+						<input type="submit" name="btnSubmit" class="btn primary" value="Simpan Berita">
 						<a href="wartawan.php" class="btn">Kembali</a>
 					</div>
 				</form>

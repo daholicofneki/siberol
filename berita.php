@@ -102,7 +102,7 @@ if ( isset($_POST) && count($_POST) > 0 )
 			<?php endif ?>
 		</div>
 	</div>
-	
+
 	<footer>
 		<p><?php echo FOOTER ?></p>
 	</footer>

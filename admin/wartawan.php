@@ -1,3 +1,12 @@
+<?php
+// Authority
+require_once ('../library/config.php');
+if ($_SESSION['AUTH'] !== 'Wartawan') header('Location: ../index.php');
+
+// Query
+$data = $DB->get('SELECT * FROM berita WHERE id_wartawan = "'. $_SESSION['ID'] .'"', 'all');
+$no = 1;
+?>
 <html>
 	<head>
 		<title>Wartawan - Daftar Berita</title>
@@ -7,11 +16,6 @@
 		<script src="../public/js/jquery.tablesorter.min.js" type="text/javascript"></script>
 	</head>
 	<body>
-<?php
-require_once ('../library/config.php');
-$data = $DB->get('SELECT * FROM berita WHERE id_wartawan = "'. $_SESSION['ID'] .'"', 'all');
-$no = 1;
-?>
 
 <script type="text/javascript">
 	$(document).ready(
