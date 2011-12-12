@@ -1,11 +1,3 @@
-<html>
-	<head>
-		<title>SIBEROL - Login</title>
-		<link href="../public/css/bootstrap.min.css" media="screen" rel="stylesheet" type="text/css" />
-		<link href="../public/css/custom.css" media="screen" rel="stylesheet" type="text/css" />
-		<script src="../public/js/jquery-1.7.min.js" type="text/javascript"></script>
-	</head>
-	<body>
 <?php
 require_once ('../library/config.php');
 
@@ -30,6 +22,14 @@ if ( isset($_POST['username']) && $_POST['username'] ) {
 	}
 }
 ?>
+<html>
+	<head>
+		<title>SIBEROL - Login</title>
+		<link href="../public/css/bootstrap.min.css" media="screen" rel="stylesheet" type="text/css" />
+		<link href="../public/css/custom.css" media="screen" rel="stylesheet" type="text/css" />
+		<script src="../public/js/jquery-1.7.min.js" type="text/javascript"></script>
+	</head>
+	<body>
 
 <?php require_once('../library/admin_menu.php') ?>
 

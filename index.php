@@ -1,3 +1,17 @@
+<?php
+require_once ('library/config.php');
+
+// Variable
+$cat = array(1=>'Hidup Sehat', 'Umum', 'Diabetes', 'Hipertensi');
+$where = array();
+$where[] = "status_tayang = '1' AND tanggal_tayang_dari <= now() AND tanggal_tayang_sampai >= now()";
+if( isset($_GET['kategori']) ) $where[] = "kategori = '". $cat[$_GET['kategori']] ."'";
+$_where = implode(' AND ', $where);
+$_show_all = ( isset($_GET['showall']) && $_GET['showall'] == 'true' ) ? "" : " LIMIT 6";
+
+// Query
+$data = $DB->get("SELECT * FROM berita WHERE $_where ORDER BY tanggal_tayang_dari $_show_all", 'all');
+?>
 <html>
 	<head>
 		<title></title>
@@ -22,25 +36,22 @@
 	);
 </script>
 
-<?php
-require_once ('library/config.php');
-
-$data = $DB->get('SELECT * FROM berita WHERE tanggal_tayang_dari >= CURRENT_DATE AND tanggal_tayang_dari <= CURRENT_DATE', 'all');
-?>
-
 <div class="container">
 
-	<!-- Main hero unit for a primary marketing message or call to action -->
 	<div class="hero-unit">
-		<h1><a href="index.php">Heath Info</a></h1>
+		<h1><a href="index.php">Health Info</a></h1>
 	</div>
 
-	<!-- Example row of columns -->
 	<div class="row">
 		<div class="span16">
 			<ul class="news-ticker" id="news">
-				<?php if ( count($data) > 0 ):?>
-				<?php foreach ($data as $item):?>
+				<?php
+				$data_news = $DB2->get("SELECT * FROM berita WHERE
+						 status_tayang = '1' AND tanggal_tayang_dari <= now() AND tanggal_tayang_sampai >= now()
+						 ORDER BY tanggal_tayang_dari LIMIT 10", 'all');
+				?>
+				<?php if ( count($data_news) > 0 ):?>
+				<?php foreach ($data_news as $item):?>
 				<li><a href="berita.php?idx=<?php echo $item->idx ?>"><?php echo substr($item->judul,0,150) ?></a></li>
 				<?php endforeach ?>
 				<?php else: ?>
@@ -48,32 +59,46 @@ $data = $DB->get('SELECT * FROM berita WHERE tanggal_tayang_dari >= CURRENT_DATE
 				<?php endif ?>
 			</ul>
 		</div>
-	</div>
-	<div class="row">
-		<div class="span6">
-			<h2>About Us</h2>
-			<p>Website ini merupakan tugas mata kuliah Server Side Scripting tahun ajaran 2011/2012.</p>
-			<p><a class="btn" href="about.php">View details &raquo;</a></p>
+	</div><br />
+
+	<div class="container-fluid">
+		<div class="row">
+			<div class="span6">
+			</div>
 		</div>
-		<div class="span10">
-			<h2>Recent articles</h2>
-			<ul>
-				<?php if ( count($data) > 0 ):?>
+		
+		<div class="sidebar">
+			<div class="well">
+				<h5>Menu Category</h5>
+				<ul>
+					<li><a href="index.php?kategori=1">Hidup Sehat</a></li>
+					<li><a href="index.php?kategori=2">Umum</a></li>
+					<li><a href="index.php?kategori=3">Diabetes</a></li>
+					<li><a href="index.php?kategori=4">Hipertensi</a></li>
+					<li><a href="index.php?showall=true">Lihat semua berita</a></li>
+				</ul>
+				<h5>About</h5>
+				<ul>
+					<li><a href="about.php">About Us</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="content">
+			<div class="row">
+				<?php if ( count($data) > 0 ): ?>
 				<?php foreach ($data as $item):?>
-				<li>
-					<a href="berita.php?idx=<?php echo $item->idx ?>">
-					<b><?php echo substr($item->judul,0,150) ?></b><br />
-					<?php echo substr($item->isi,0,250).'...' ?>
-					</a>
-				</li>
+				<div class="span5">
+					<p><strong><?php echo $item->judul ?></strong><?php echo substr($item->isi,0,150).'...' ?></p>
+					<p><a class="btn small" href="berita.php?idx=<?php echo $item->idx ?>">Continue reading &raquo;</a></p>
+				</div>
 				<?php endforeach?>
 				<?php else: ?>
-				<li>Tidak ada berita yang ditampilkan</li>
-				<?php endif ?>
-			</ul>
+				Tidak ada berita yang ditampilkan
+				<?php endif; ?>
+			</div>
 		</div>
 	</div>
-	
+
 	<footer>
 		<p><?php echo FOOTER ?></p>
 	</footer>

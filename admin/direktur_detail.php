@@ -3,6 +3,59 @@
 require_once ('../library/config.php');
 if ($_SESSION['AUTH'] !== 'Direktur') header('Location: ../index.php');
 
+// Get POST Action
+if ($_POST)
+{
+	if ( $_POST['action'] == 'update_article' )
+	{
+		
+		$file = array();
+		    $valid = array ('image/png','image/jpeg','image/gif', 'image/jpg');
+		    
+		    $file["nama"] = $_FILES['gambar']['name'];
+		    $file["lokasi"] = $_FILES['gambar']['tmp_name'];
+		    $file["tipe"] = $_FILES['gambar']['type'];
+		    $file["ukuran"] = $_FILES['gambar']['size'];
+		    
+		    if ((in_array($file["tipe"], $valid, true)))
+		    {
+			$lokasi_img = 'uploads/' . $file["nama"];
+			move_uploaded_file($file["lokasi"], $lokasi_img);
+			
+		    }
+		    else
+		    {
+			$lokasi_img = $_POST['gambar'];
+		    }
+
+		$tgl_tayang = ($_POST['_tanggal_tayang']=='') ? '0000-00-00':$_POST['_tanggal_tayang'];
+		$tgl_expired = ($_POST['_tanggal_expired']=='') ? '0000-00-00':$_POST['_tanggal_expired'];
+
+		$data = $DB->query ('UPDATE berita SET
+			judul			= "'.$_POST['_judul'].'",
+			isi			= "'.$_POST['_isi'].'",
+			kategori		= "'.$_POST['cboKategori'].'",
+			id_wartawan		= "'.$_SESSION['ID'].'",
+			gambar			= "'.$lokasi_img .'",
+			tanggal_tayang_dari	= "'.$tgl_tayang.'",
+			tanggal_tayang_sampai	= "'.$tgl_expired.'",
+			status_tayang		= "'.$_POST['cboStatus'].'"
+		       WHERE idx = '. $_GET['idx']
+		      );
+		
+	}
+	else if ( $_POST['action'] == 'delete_article' )
+	{
+		$data = $DB->query ('DELETE FROM berita WHERE idx = '. $_GET['idx']);
+		header( 'Location:direktur.php' );
+	}
+	else if ( $_POST['action'] == 'delete_image_article' )
+	{
+		$data = $DB->query ('UPDATE berita SET gambar = "" WHERE idx = '. $_GET['idx']);
+	}
+
+}
+
 // Query
 $data = $DB->get('SELECT * FROM berita WHERE idx = ' . $_GET['idx'], 'one');
 ?>
@@ -78,7 +131,6 @@ $data = $DB->get('SELECT * FROM berita WHERE idx = ' . $_GET['idx'], 'one');
 				<h2>Detail Berita </h2>
 				<h4>Edit Berita </h4>
 				<form name="berita" id="berita" action="" method="post" enctype="multipart/form-data">
-				
 				<input type="hidden" name="action" id="action">
 				<ul>
 					<li>
@@ -91,17 +143,17 @@ $data = $DB->get('SELECT * FROM berita WHERE idx = ' . $_GET['idx'], 'one');
 					<li>
 						<label>Kategori Berita</label>
 						<select name="cboKategori" id="cboKategori">
-							<option value="Umum"<?php echo ($data->kategori == 'Umum') ? ' selected': '' ?>>Umum</option>
 							<option value="Hidup Sehat"<?php echo ($data->kategori == 'Hidup Sehat') ? ' selected': '' ?>>Hidup Sehat</option>
+							<option value="Umum"<?php echo ($data->kategori == 'Umum') ? ' selected': '' ?>>Umum</option>
 							<option value="Diabetes"<?php echo ($data->kategori == 'Diabetes') ? ' selected': '' ?>>Diabetes</option>
 							<option value="Hipertensi"<?php echo ($data->kategori == 'Hipertensi') ? ' selected': '' ?>>Hipertensi</option>
-							<option value="Ibu & Anak"<?php echo ($data->kategori == 'Ibu & Anak') ? ' selected': '' ?>>Ibu & Anak</option>
 						</select>
 					</li>
 					<li>
 						<label>Gambar</label>
 						<?php if( $data->gambar != '' ): ?>
-							<img src="../<?php echo $data->gambar ?>">
+							<img src="<?php echo $data->gambar ?>">
+							<input type="hidden" name="gambar" value="<?php echo $data->gambar ?>"> 
 							<input type="submit" name="btnDeleteImage" id="btnDeleteImage" class="btn danger" value="Hapus Gambar">
 						<?php else: ?>
 							<input type="file" name="gambar"> * <i>Image only, max 100kb</i>
@@ -116,24 +168,24 @@ $data = $DB->get('SELECT * FROM berita WHERE idx = ' . $_GET['idx'], 'one');
 					<li>
 						<label>Status tayang</label>
 						<select name="cboStatus">
-							<option value="0">Belum Tayang</option>
-							<option value="1">Tayang</option>
-							<option value="2">Ditolak</option>
+							<option value="0"<?php echo ($data->status_tayang == '0') ? " selected":"" ?>>Belum Tayang</option>
+							<option value="1"<?php echo ($data->status_tayang == '1') ? " selected":"" ?>>Tayang</option>
+							<option value="2"<?php echo ($data->status_tayang == '2') ? " selected":"" ?>>Ditolak</option>
 						</select>
 					</li>
 					<li>
 						<label>Tanggal tayang</label>
-						<input type="date"  name="_tanggal_tayang" id="_tanggal_tayang" placeholder="yyyy-mm-dd">
+						<input type="date"  name="_tanggal_tayang" id="_tanggal_tayang" placeholder="yyyy-mm-dd" value="<?php echo ($data->tanggal_tayang_dari=='0000-00-00')?'':$data->tanggal_tayang_dari ?>">
 					</li>
 					<li>
 						<label>Tanggal expired</label>
-						<input type="date"  name="_tanggal_expired" id="_tanggal_expired" placeholder="yyyy-mm-dd">
+						<input type="date"  name="_tanggal_expired" id="_tanggal_expired" placeholder="yyyy-mm-dd" value="<?php echo ($data->tanggal_tayang_sampai=='0000-00-00')?'':$data->tanggal_tayang_sampai ?>">
 					</li>
 				</ul>
 				<div align="center">
 					<input type="submit" name="btnUpdate" id="btnUpdate" class="btn primary" value="Update Berita">
 					<input type="submit" name="btnDelete" id="btnDelete" class="btn danger" value="Hapus">
-					<a href="wartawan.php" class="btn">Kembali</a>
+					<a href="direktur.php" class="btn">Kembali</a>
 				</div>
 				</form>
 			</div>
@@ -145,6 +197,25 @@ $data = $DB->get('SELECT * FROM berita WHERE idx = ' . $_GET['idx'], 'one');
 	</div>
 
 </div>
+
+<script language="javascript">
+$(document).ready(
+	function(){
+		$('#btnUpdate').click(function() {
+			$('#action').val('update_article');
+			$('#berita').submit();
+		});
+		$('#btnDelete').click(function() {
+			$('#action').val('delete_article');
+			$('#berita').submit();
+		});
+		$('#btnDeleteImage').click(function() {
+			$('#action').val('delete_image_article');
+			$('#berita').submit();
+		});
+	}
+);
+</script>
 
 	</body>
 </html>

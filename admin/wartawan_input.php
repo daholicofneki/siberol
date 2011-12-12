@@ -6,29 +6,28 @@ if ($_SESSION['AUTH'] !== 'Wartawan') header('Location: ../index.php');
 // Get POST Action
 if ( isset($_POST['btnSubmit']) )
 {
-	$img = array();
-	$img["nama"] = $_FILES['gambar']['name'];
-	$img["lokasi"] = $_FILES['gambar']['tmp_name'];
-	$img["tipe"] = $_FILES['gambar']['type'];
-	$img["ukuran"] = $_FILES['gambar']['size'];
+	 $file = array();
+		    $valid = array ('image/png','image/jpeg','image/gif', 'image/jpg');
+		    
+		    $file["nama"] = $_FILES['gambar']['name'];
+		    $file["lokasi"] = $_FILES['gambar']['tmp_name'];
+		    $file["tipe"] = $_FILES['gambar']['type'];
+		    $file["ukuran"] = $_FILES['gambar']['size'];
+		    
+		    if ((in_array($file["tipe"], $valid, true)))
+		    {
+			$lokasi_img = 'uploads/' . $file["nama"];
+			move_uploaded_file($file["lokasi"], $lokasi_img);
+			
+		    }
+		    else
+		    {
+			$lokasi_img ='';
+		    }
 
-	if ((($img["tipe"] == "image/gif")
-	|| ($img["tipe"] == "image/png")
-	|| ($img["tipe"] == "image/jpeg")
-	|| ($img["tipe"] == "image/pjpeg"))
-	&& ($img["tipe"] < 100000))
-	{
-		$dir_img = 'public/image/upload/' . $img["nama"];
-		move_uploaded_file($img["lokasi"], $dir_img);
-	}
-	else
-	{
-		$dir_img = '';
-	}
+	$data = $DB->query ('INSERT INTO berita (judul,isi,kategori,id_wartawan,gambar)
+		     VALUES ("'.$_POST['_judul'].'","'.$_POST['_isi'].'","'.$_POST['cboKategori'].'","'.$_SESSION['ID'].'","'.$lokasi_img.'")');
 
-	$DB->query ('INSERT INTO berita (judul,isi,kategori,id_wartawan,gambar)
-		     VALUES ("'.$_POST['_judul'].'","'.$_POST['_isi'].'","'.$_POST['cboKategori'].'","'.$_SESSION['ID'].'","'.$dir_img.'")');
-	header( 'Location:wartawan.php' );
 }
 ?>
 <html>
@@ -101,6 +100,9 @@ if ( isset($_POST['btnSubmit']) )
 		<div class="row">
 			<div class="span12">
 				<h2>Input Berita</h2>
+                                <?php
+                                if (isset($data) && $data) echo '<div class="alert-message block-message success"><p>Sukses menyimpan artikel<p></div>';
+                                ?>
 				<form name="berita" action="" method="post" enctype="multipart/form-data">
 					<ul>
 						<li>
@@ -109,11 +111,10 @@ if ( isset($_POST['btnSubmit']) )
 						<li>
 							<label>Kategori Berita</label>
 							<select name="cboKategori">
-								<option value="Umum">Umum</option>
 								<option value="Hidup Sehat">Hidup Sehat</option>
+								<option value="Umum">Umum</option>
 								<option value="Diabetes">Diabetes</option>
 								<option value="Hipertensi">Hipertensi</option>
-								<option value="Ibu & Anak">Ibu & Anak</option>
 							</select>
 						</li>
 						<li>

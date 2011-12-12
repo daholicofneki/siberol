@@ -11,9 +11,9 @@
 class Database {
         
         private $host           = 'localhost';
-        private $username       = 'root';
-        private $password       = '';
-        private $db             = 'siberol';
+        private $username       = 'k4448007_nn';
+        private $password       = '!@#$%^';
+        private $db             = 'k4448007_nekinurvina';
         private $connection;
         private $arr            = array ();
         
@@ -73,15 +73,7 @@ class Database {
                 {
                         try
                         {
-                                $query = mysql_query ($SQL);
-                                if  ( ! $query)
-                                {
-                                        throw new Exception ('Query Gagal');
-                                }
-                                else
-                                {
-                                        return mysql_query ($SQL);
-                                }
+                                return mysql_query ($SQL);
                         }
                         catch ( Exception $m)
                         {
@@ -128,5 +120,6 @@ class Database {
 /*  End class Database  */
 $DB = new Database ();
 $DB2 = new Database ();
+$DB3 = new Database ();
 //$DB->show_host();
 //print_r ($DB->get_all("SELECT * FROM berita WHERE status='1'"));

@@ -11,7 +11,7 @@
 <div class="container">
 
 	<div class="hero-unit">
-		<h1><a href="index.php">Heath Info</a></h1>
+		<h1><a href="index.php">Health Info</a></h1>
 	</div>
 
 	<div class="row">
@@ -29,37 +29,6 @@
 					<li>Nurvina Ahdiani</li>
 				</ol>
 			</p>
-			<p>
-				Untuk mengakses backend dari website ini, bisa login melalui <a href="admin/login.php" target="_blank">Login Page</a>
-			</p>
-			<table style="width:80%">
-				<tr>
-					<th width="15%">Username</th>
-					<th width="15%">Password</th>
-					<th>Akses</th>
-				</tr>
-				<tr>
-					<td>admin</td>
-					<td>admin</td>
-					<td>
-						<ol>
-							<li>Mempunyai Hak untuk menulis artikel dan menghapus artikel yang ditulisnya</li>
-							<li>Tidak mempunyai hak untuk menayangkan artikel</li>
-						</ol>
-					</td>
-				</tr>
-				<tr>
-					<td>user1 / user2</td>
-					<td>user</td>
-					<td>
-						<ol>
-							<li>Mempunyai Hak untuk menulis artikel dan menghapus artikel yang ditulisnya</li>
-							<li>Mempunyai Hak untuk mereview artikel yang di tulis oleh Wartawan sebelum di tayangkan</li>
-							<li>Mempunyai Hak untuk mengedit artikel yang di tulis oleh Wartawan sebelum di tayangkan</li>
-						</ol>
-					</td>
-				</tr>
-			</table>
 		</div>
 	</div>
 	

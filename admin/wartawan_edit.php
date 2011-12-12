@@ -9,28 +9,31 @@ if ($_POST)
 	if ( $_POST['action'] == 'update_article' )
 	{
 
-		if ( isset ($_FILES) )
-		{
-			$img = array();
-			$img["nama"] = $_FILES['gambar']['name'];
-			$img["lokasi"] = $_FILES['gambar']['tmp_name'];
-			$img["tipe"] = $_FILES['gambar']['type'];
-			$img["ukuran"] = $_FILES['gambar']['size'];
-	
-			$dir_img = 'public/image/upload/' . $img["nama"];
-			move_uploaded_file($img["lokasi"], $dir_img);
-		}
-		else
-		{
-			$dir_img = '';
-		}
+		$file = array();
+		    $valid = array ('image/png','image/jpeg','image/gif', 'image/jpg');
+		    
+		    $file["nama"] = $_FILES['gambar']['name'];
+		    $file["lokasi"] = $_FILES['gambar']['tmp_name'];
+		    $file["tipe"] = $_FILES['gambar']['type'];
+		    $file["ukuran"] = $_FILES['gambar']['size'];
+		    
+		    if ((in_array($file["tipe"], $valid, true)))
+		    {
+			$lokasi_img = 'uploads/' . $file["nama"];
+			move_uploaded_file($file["lokasi"], $lokasi_img);
+			
+		    }
+		    else
+		    {
+			$lokasi_img = $_POST['gambar'];
+		    }
 
 		$DB->query ('UPDATE berita SET
 				judul		= "'.$_POST['_judul'].'",
 				isi		= "'.$_POST['_isi'].'",
 				kategori	= "'.$_POST['cboKategori'].'",
 				id_wartawan	= "'.$_SESSION['ID'].'",
-				gambar		= "'.$dir_img.'"
+				gambar		= "'.$lokasi_img.'"
 			       WHERE idx = '. $_GET['idx']
 			      );
 	}
@@ -54,6 +57,9 @@ if ( empty($_GET['idx']) )
 else
 {
 	$data = $DB->get ('SELECT * FROM berita WHERE idx = '. $_GET['idx'] , 'one');
+        // Jika status artikel sudah tayang, maka tidak boleh edit artikel
+        if ( $data->status_tayang == 1 )
+                header( 'Location:wartawan_detail.php?idx=' . $_GET['idx']);
 
 	// If data == null
 	if ( $data == null )
@@ -137,17 +143,17 @@ else
 					<li>
 						<label>Kategori Berita</label>
 						<select name="cboKategori" id="cboKategori">
-							<option value="Umum"<?php echo ($data->kategori == 'Umum') ? ' selected': '' ?>>Umum</option>
 							<option value="Hidup Sehat"<?php echo ($data->kategori == 'Hidup Sehat') ? ' selected': '' ?>>Hidup Sehat</option>
+							<option value="Umum"<?php echo ($data->kategori == 'Umum') ? ' selected': '' ?>>Umum</option>
 							<option value="Diabetes"<?php echo ($data->kategori == 'Diabetes') ? ' selected': '' ?>>Diabetes</option>
 							<option value="Hipertensi"<?php echo ($data->kategori == 'Hipertensi') ? ' selected': '' ?>>Hipertensi</option>
-							<option value="Ibu & Anak"<?php echo ($data->kategori == 'Ibu & Anak') ? ' selected': '' ?>>Ibu & Anak</option>
 						</select>
 					</li>
 					<li>
 						<label>Gambar</label>
 						<?php if( $data->gambar != '' ): ?>
-							<img src="../<?php echo $data->gambar ?>">
+							<img src="<?php echo $data->gambar ?>">
+							<input type="hidden" name="gambar" value="<?php echo $data->gambar ?>"> 
 							<input type="submit" name="btnDeleteImage" id="btnDeleteImage" class="btn danger" value="Hapus Gambar">
 						<?php else: ?>
 							<input type="file" name="gambar"> * <i>Image only, max 100kb</i>

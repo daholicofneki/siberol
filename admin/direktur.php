@@ -3,9 +3,21 @@
 require_once ('../library/config.php');
 if ($_SESSION['AUTH'] !== 'Direktur') header('Location: ../index.php');
 
+// Variable
+$where = array();
+$cbo[0] = isset($_GET['cboFilter']) ? $_GET['cboFilter'] : 'all';
+$cbo[1] = isset($_GET['cboCategory']) ? $_GET['cboCategory'] : 'all';
+
+if ($cbo[0] != 'all') $where[] = "status_tayang = '". $cbo[0] ."'";
+if ($cbo[1] != 'all') $where[] = "kategori = '". $cbo[1] ."'";
+$_where = implode(' AND ', $where);
+if ($_where != '')
+        $_where = " WHERE $_where";
+else    $_where = "";
+
 // Query
-$data = $DB->get('SELECT * FROM berita', 'all');
-$no =1;
+$data = $DB->get("SELECT * FROM berita $_where ORDER BY tanggal_tayang_dari", 'all');
+$no = 1;
 ?>
 <html>
 	<head>
@@ -15,6 +27,19 @@ $no =1;
 		<script src="../public/js/jquery-1.7.min.js" type="text/javascript"></script>
 	</head>
 	<body>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+
+                $('#cboFilter').change(function() {
+                        $('#frmSearch').submit();
+                });
+                $('#cboCategory').change(function() {
+                        $('#frmSearch').submit();
+                });
+
+	});
+</script>
 
 <?php require_once('../library/admin_menu.php') ?>
 
@@ -26,34 +51,31 @@ $no =1;
 		</div>
 		<div class="row">
 			<div class="span16">
-				<form name="frmSearch">
+				<form name="frmSearch" id="frmSearch" method="GET">
 				<table>
 					<tr>
-						<td rowspan="2" width="50%"><h2>Daftar  Berita</h2></td>
+						<td rowspan="2" width="70%"><h2>Daftar  Berita</h2></td>
 						<td>Filter</td>
 						<td>Category</td>
-						<td>Date</td>
 					</tr>
 					<tr>
 						<td>
-							<select name="cboFilter">
-								<option value="all">== ALL ==</option>
-								<option value="approved">Approved</option>
-								<option value="pending">Pending</option>
-								
+							<select name="cboFilter" id="cboFilter">
+								<option value="all"<?php echo ($cbo[0] == 'all')?' selected': ''?>>=== ALL ===</option>
+                                                                <option value="0"<?php echo ($cbo[0] == '0')?' selected': ''?>>Belum Tayang</option>
+                                                                <option value="1"<?php echo ($cbo[0] == '1')?' selected': ''?>>Tayang</option>
+                                                                <option value="2"<?php echo ($cbo[0] == '2')?' selected': ''?>>Ditolak</option>
 							</select>
 						</td>
 						<td>
-							<select name="cboCategory">
-								<option value="all">== ALL ==</option>
-								<option value="Hidup Sehat">Hidup Sehat</option>
-								<option value="Diabetes">Diabetes</option>
-								<option value="Hipertensi">Hipertensi</option>
-								<option value="Ibu & Anak">Ibu & Anak</option>
-								<option value="Umum">Umum</option>
+							<select name="cboCategory" id="cboCategory">
+								<option value="all"<?php echo ($cbo[1] == 'all')?' selected': ''?>>=== ALL ===</option>
+								<option value="Umum"<?php echo ($cbo[1] == 'Umum')?' selected': ''?>>Umum</option>
+								<option value="Hidup Sehat"<?php echo ($cbo[1] == 'Hidup Sehat')?' selected': ''?>>Hidup Sehat</option>
+								<option value="Diabetes"<?php echo ($cbo[1] == 'Diabetes')?' selected': ''?>>Diabetes</option>
+								<option value="Hipertensi"<?php echo ($cbo[1] == 'Hipertensi')?' selected': ''?>>Hipertensi</option>
 							</select>
 						</td>
-						<td><input type="txtDate" size="10"></td>
 					</tr>
 				</table>
 				</form>
@@ -74,12 +96,13 @@ $no =1;
 						<td><?php echo $no++ ?></td>
 						<td><?php echo $item->judul ?></td>
 						<td><?php echo substr($item->isi,0,500).'...' ?></td>
-						<td>
-							<a class="i-edit" href="direktur_detail.php?idx=<?php echo $item->idx ?>">&nbsp; Edit</a>
-							<a class="i-cross" href="#">&nbsp; Delete</a>
-						</td>
+						<td><a class="i-edit" href="direktur_detail.php?idx=<?php echo $item->idx ?>">&nbsp; Edit</a></td>
 					</tr>
 					<?php endforeach?>
+                                        <?php else: ?>
+                                        <tr>
+                                                <td colspan="4"><i>Tidak ada artikel</i></td>
+                                        </tr>
 					<?php endif?>
 					</tbody>
 				</table>
