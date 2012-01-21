@@ -11,9 +11,9 @@
 class Database {
         
         private $host           = 'localhost';
-        private $username       = 'k4448007_nn';
-        private $password       = '!@#$%^';
-        private $db             = 'k4448007_nekinurvina';
+        private $username       = 'root';
+        private $password       = '';
+        private $db             = 'pemweb';
         private $connection;
         private $arr            = array ();
         
